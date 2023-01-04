@@ -19,7 +19,8 @@ FutureOr<Response> onRequest(RequestContext context) async {
 }
 
 Future<Response> _post(RequestContext context) async {
-  final dataSource = await context.read<Future<DatabaseConnection>>();
+  try {
+    final dataSource = await context.read<Future<DatabaseConnection>>();
 
   final groupFunction = GroupFunction(dataSource.sqlConnection);
   final participantsFunction = ParticipantsFunction(dataSource.sqlConnection);
@@ -30,4 +31,8 @@ Future<Response> _post(RequestContext context) async {
   await participantsFunction.insert(json);
 
   return Response.json(statusCode: HttpStatus.created);
+  } on DatabaseException catch (e) {
+    print(e.message);
+  }
+  return Response.json(statusCode: HttpStatus.internalServerError);
 }

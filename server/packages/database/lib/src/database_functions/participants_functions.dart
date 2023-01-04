@@ -24,7 +24,7 @@ class ParticipantsFunction extends DatabaseFunction {
     return DatabaseException.wrapper<IResultSet>(
       body: () async {
         return await sqlConnection.execute(
-          'insert into participants(groupId, groupName, userId) values(:groupId, :groupName, hex(:userId))',
+          'insert into participants(groupId, userId) values(:groupId, unhex(:userId))',
           json,
         );
       }, 
