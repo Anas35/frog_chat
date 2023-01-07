@@ -1,4 +1,5 @@
 import 'package:chat_app/authentication/cubit/authentication_cubit.dart';
+import 'package:chat_app/group_details/group_details.dart';
 import 'package:chat_app/groups_creation/cubits/group_list_cubit/group_list_cubit.dart';
 import 'package:chat_app/page/create_group.dart';
 import 'package:chat_app/page/join_group.dart';
@@ -51,19 +52,13 @@ class HomePage extends StatelessWidget {
             ),
             BlocBuilder<GroupListCubit, GroupListState>(
               builder: (context, state) {
-                return SliverFillRemaining(
-                  child: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final groupList = state.groupList[index];
-                        return Container(
-                          height: 60,
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text('${groupList.groupId}: ${groupList.groupName}'),
-                        );
-                      },
-                      childCount: state.groupList.length,
-                    ),
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final groupId = state.groupList[index];
+                      return GroupDetailsView(groupId: groupId);
+                    },
+                    childCount: state.groupList.length,
                   ),
                 );
               },

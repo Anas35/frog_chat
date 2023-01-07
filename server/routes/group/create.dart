@@ -23,12 +23,10 @@ Future<Response> _post(RequestContext context) async {
     final dataSource = await context.read<Future<DatabaseConnection>>();
 
   final groupFunction = GroupFunction(dataSource.sqlConnection);
-  final participantsFunction = ParticipantsFunction(dataSource.sqlConnection);
   
   final json = await context.request.json() as Map<String, dynamic>;
 
   await groupFunction.insert(json);
-  await participantsFunction.insert(json);
 
   return Response.json(statusCode: HttpStatus.created);
   } on DatabaseException catch (e) {

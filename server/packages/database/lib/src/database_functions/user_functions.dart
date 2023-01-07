@@ -9,6 +9,16 @@ class UserFunction extends DatabaseFunction {
 
   final MySQLConnection sqlConnection;
 
+  Future<IResultSet> getGroupList(String id) {
+    return DatabaseException.wrapper(
+      body: () async {
+        final groupList = await sqlConnection.execute("select groupId from `participants` where userId = unhex('$id')");
+        return groupList;
+      },
+      message: 'Couldn\'t fetch group list',
+    );
+  }
+
   @override
   Future<IResultSet> get(String id) async {
     return DatabaseException.wrapper<IResultSet>(

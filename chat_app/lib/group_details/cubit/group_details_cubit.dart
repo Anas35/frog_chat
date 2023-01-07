@@ -32,7 +32,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   Future<Group> _fetch(String groupId) async {
     final response = await http.get(Uri.parse('$_url/$groupId'));
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return Group.fromJson(jsonDecode(response.body));
     } else {
       throw 'failed to fetch group';

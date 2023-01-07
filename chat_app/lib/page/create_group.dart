@@ -37,7 +37,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               }
             },
           ),
-          BlocListener<GroupCodeCubit, GroupCodeState>(
+          BlocListener<GroupCubit, GroupState>(
             listener: (context, state) {
               if (state.status == Status.failed) {
                 context.snackBar("${state.message}");

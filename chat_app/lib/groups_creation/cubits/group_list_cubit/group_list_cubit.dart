@@ -2,7 +2,6 @@ import 'package:chat_app/groups_creation/repository/group_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chat_app/groups_creation/group_enum.dart';
 import 'package:equatable/equatable.dart';
-import 'package:models/models.dart';
 
 part 'group_list_state.dart';
 

@@ -41,14 +41,18 @@ class GroupRepository {
     }
   }
 
-  Future<List<Group>> getJoinedGroup(String userId) async {
-    const String _url = "http://localhost:8080/user/group-list";
+  Future<List<String>> getJoinedGroup(String userId) async {
+    const String url = "http://localhost:8080/user/group-list";
 
-    final response = await http.post(Uri.parse(_url));
+    ///TODO Make this get
+    final response = await http.post(
+      Uri.parse(url),
+      body: userId,
+    );
 
     if (response.statusCode == 200) {
-      final groups = jsonDecode(response.body)['groups'] as List<Map<String, dynamic>>;
-      return groups.map((e) => Group.fromJson(e)).toList();
+      final groups = jsonDecode(response.body) as List<dynamic>;
+      return groups.map((e) => e as String).toList();
     } else {
       throw 'Failed to fetch groups';
     }

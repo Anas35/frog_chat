@@ -6,14 +6,14 @@ class GroupListState extends Equatable {
 
   final String? message;
 
-  final List<Group> groupList;
+  final List<String> groupList;
 
   const GroupListState({this.groupList = const [], this.message, this.status = Status.initial});
 
   GroupListState copyWith({
     Status? status,
     String? message,
-     List<Group>? groupList,
+     List<String>? groupList,
   }) {
     return GroupListState(
       status: status ?? this.status,

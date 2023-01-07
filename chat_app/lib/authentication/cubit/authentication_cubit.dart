@@ -37,8 +37,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       final user = await _authenticationRepository.addUser(userName);
       emit(state.copyWith(status: AuthenticationStatus.authenticated, user: user));
     } catch (e) {
+      print(e);
       emit(state.copyWith(status: AuthenticationStatus.unauthenticated));
-      rethrow;
     }
   }
 

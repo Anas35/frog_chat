@@ -22,7 +22,7 @@ class GroupDetailsView extends StatelessWidget {
           );
         } else if (state.status == Status.success) {
           return Container(
-            height: 60,
+            height: 50,
             padding: const EdgeInsets.all(12.0),
             child: Text('${state.group?.groupId}: ${state.group?.groupName}'),
           );

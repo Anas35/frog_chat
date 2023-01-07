@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:database/database.dart';
 
-FutureOr<Response> onRequest(RequestContext context, String id) async {
+FutureOr<Response> onRequest(RequestContext context) async {
   switch (context.request.method) {
     case HttpMethod.get:
-      return _get(context, id);
     case HttpMethod.post:
+      return _get(context);
     case HttpMethod.delete:
     case HttpMethod.head:
     case HttpMethod.options:
@@ -18,15 +18,18 @@ FutureOr<Response> onRequest(RequestContext context, String id) async {
   }
 }
 
-Future<Response> _get(RequestContext context, String id) async {
+Future<Response> _get(RequestContext context) async {
   try {
     final dataSource = await context.read<Future<DatabaseConnection>>();
-    final groupFunction = GroupFunction(dataSource.sqlConnection);
+    final userFunction = UserFunction(dataSource.sqlConnection);
+    final userId = await context.request.body();
 
-    final user = await groupFunction.get(id);
+    final user = await userFunction.getGroupList(userId);
+
+    final list = user.rows.map((row) => row.assoc()['groupId']).toList();
 
     return Response.json(
-      body: user.rows.first.assoc(),
+      body: list,
     );
   } on DatabaseException catch (e, stackTrace) {
     print(e.message + stackTrace.toString());
