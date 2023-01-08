@@ -1,4 +1,5 @@
 import 'package:chat_app/authentication/cubit/authentication_cubit.dart';
+import 'package:chat_app/current_user/current_user.dart';
 import 'package:chat_app/groups_creation/cubits/group_cubit/group_cubit.dart';
 import 'package:chat_app/groups_creation/group_enum.dart';
 import 'package:chat_app/page/home_page.dart';
@@ -30,7 +31,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
         }
       },
       builder: (context, state) {
-        if(state.status == Status.loading) {
+        if (state.status == Status.loading) {
           return const Center(child: CircularProgressIndicator());
         }
         return Scaffold(
@@ -45,13 +46,16 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                     onChanged: (value) => groupId = value,
                   ),
                   const SizedBox(height: 10.0),
-                  ReButton(
-                    text: 'Join',
-                    onPressed: () async {
-                      final userId = context.read<AuthenticationCubit>().userId;
-                      final participant = Participants(groupId: groupId, userId: userId!);
+                  BlocBuilder<CurrentUserCubit, User?>(
+                    builder: (context, state) {
+                      return ReButton(
+                        text: 'Join',
+                        onPressed: () async {
+                          final participant = Participants(groupId: groupId, userId: state!.id);
 
-                      context.read<GroupCubit>().joinGroup(participant);
+                          context.read<GroupCubit>().joinGroup(participant);
+                        },
+                      );
                     },
                   ),
                 ],

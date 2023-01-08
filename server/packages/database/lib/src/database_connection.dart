@@ -16,7 +16,8 @@ class DatabaseException implements Exception {
     } on MySQLException catch (e) {
       throw DatabaseException(e.message);
     } catch (e) {
-      throw DatabaseException('$message, Error: $e');
+      print(e);
+      throw DatabaseException(message);
     }
   }
 }
@@ -27,27 +28,25 @@ class DatabaseConnection {
   DatabaseConnection._init(this.sqlConnection);
 
   static Future<DatabaseConnection> init() async {
-
-    final env = DotEnv()..load();
-
-    final connection = await MySQLConnection.createConnection(
-      host: '127.0.0.1',
-      port: 3306,
-      userName: env['userName']!,
-      password: env['password']!,
-      databaseName: 'funky', // optional,
-      secure: false,
-    );
-
     try {
+      final env = DotEnv()..load();
+
+      final connection = await MySQLConnection.createConnection(
+        host: '127.0.0.1',
+        port: 3306,
+        userName: env['userName']!,
+        password: env['password']!,
+        databaseName: 'funky', // optional,
+        secure: false,
+      );
+
       await connection.connect();
+
+      return DatabaseConnection._init(connection);
     } on MySQLException catch (e) {
       throw DatabaseException(e.message);
     } catch (e) {
-      throw DatabaseException('Something went wrong');
+      throw DatabaseException('Failed to connect Database');
     }
-
-    return DatabaseConnection._init(connection);
   }
-
 }

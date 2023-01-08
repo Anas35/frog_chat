@@ -1,30 +1,34 @@
 part of 'authentication_cubit.dart';
 
-enum AuthenticationStatus {
-  unauthenticated,
-  authenticated,
-  loading
-}
+enum AuthenticationStatus {unknown, unauthenticated, authenticated}
 
 class AuthenticationState extends Equatable {
 
-  final AuthenticationStatus status;
+  final AuthenticationStatus authenticationStatus;
 
-  final User? user;
+  final User user;
 
-  const AuthenticationState({this.status = AuthenticationStatus.unauthenticated, this.user});
+  final String errorMessage;
+
+  const AuthenticationState({
+    this.authenticationStatus = AuthenticationStatus.unknown, 
+    this.user = const User(id: '', name: ''), 
+    this.errorMessage = '', 
+  });
 
   AuthenticationState copyWith({
-    AuthenticationStatus? status,
-    User? user
+    User? user,
+    String? errorMessage,
+    AuthenticationStatus? authenticationStatus,
   }) {
     return AuthenticationState(
-      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
       user: user ?? this.user,
+      authenticationStatus: authenticationStatus ?? this.authenticationStatus,
     );
   }
   
   @override
-  List<Object?> get props => [status, user];
+  List<Object?> get props => [errorMessage, user, authenticationStatus];
 
 }

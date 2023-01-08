@@ -8,15 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.userId});
+
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        final userId = context.read<AuthenticationCubit>().userId;
-        return GroupListCubit()..getGroupList(userId!);
-      },
+      create: (context) => GroupListCubit()..getGroupList(userId),
       child: Scaffold(
         body: CustomScrollView(
           slivers: [

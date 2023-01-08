@@ -1,4 +1,4 @@
-import 'package:chat_app/authentication/cubit/authentication_cubit.dart';
+import 'package:chat_app/current_user/current_user.dart';
 import 'package:chat_app/groups_creation/cubits/group_code_cubit/group_code_cubit.dart';
 import 'package:chat_app/groups_creation/cubits/group_cubit/group_cubit.dart';
 import 'package:chat_app/groups_creation/group_enum.dart';
@@ -66,15 +66,18 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                         onChanged: (value) => groupName = value,
                       ),
                       const SizedBox(height: 15.0),
-                      ReButton(
-                        text: 'Create',
-                        onPressed: () {
-                          final group = Group(groupId: groupId, groupName: groupName);
-                          final userId = context.read<AuthenticationCubit>().userId;
-                          final participant = Participants(groupId: groupId, userId: userId!);
+                      BlocBuilder<CurrentUserCubit, User?>(
+                        builder: (context, state) {
+                          return ReButton(
+                            text: 'Create',
+                            onPressed: () {
+                              final group = Group(groupId: groupId, groupName: groupName);
+                              final participant = Participants(groupId: groupId, userId: state!.id);
 
-                          final groupCubit = context.read<GroupCubit>();
-                          groupCubit.createAndJoin(group, participant);
+                              final groupCubit = context.read<GroupCubit>();
+                              groupCubit.createAndJoin(group, participant);
+                            },
+                          );
                         },
                       ),
                     ],
