@@ -1,4 +1,3 @@
-import 'package:chat_app/authentication/cubit/authentication_cubit.dart';
 import 'package:chat_app/group_details/group_details.dart';
 import 'package:chat_app/groups_creation/cubits/group_list_cubit/group_list_cubit.dart';
 import 'package:chat_app/page/create_group.dart';
@@ -14,8 +13,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GroupListCubit()..getGroupList(userId),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => GroupListCubit()..getGroupList(userId)),
+      ],
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -27,21 +28,27 @@ class HomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ReButton(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const CreateGroupPage()),
                         );
+                        if (context.mounted) {
+                          await context.read<GroupListCubit>().getGroupList(userId);
+                        }
                       },
                       text: 'Create group',
                     ),
                     const SizedBox(height: 30),
                     ReButton(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const JoinGroupPage()),
                         );
+                        if (context.mounted) {
+                          await context.read<GroupListCubit>().getGroupList(userId);
+                        }
                       },
                       text: 'Join group',
                     ),

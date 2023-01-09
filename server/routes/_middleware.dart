@@ -1,6 +1,6 @@
 import 'package:dart_frog/dart_frog.dart';
+import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
 import 'package:database/database.dart';
-import 'package:stream_channel/stream_channel.dart';
 
 final databaseProvider = provider<Future<DatabaseConnection>>(
   (_) => DatabaseConnection.init(),
@@ -16,21 +16,21 @@ Handler middleware(Handler handler) {
 
 class Broadcast {
 
-  final _channels = <String, List<StreamChannel<dynamic>>>{};
+  final _channels = <String, List<WebSocketChannel>>{};
 
-  void broadcast(String id, String message) {
-    for (final channel in _channels[id] ?? []) {
+  void broadcast(String groupId, String message) {
+    for (final channel in _channels[groupId] ?? <WebSocketChannel>[]) {
       channel.sink.add(message);
     }
   }
 
-  void subscribe(String id, StreamChannel<dynamic> channel) {
+  void subscribe(String groupId, WebSocketChannel channel) {
     _channels.update(
-      id, (value) => [...value, channel], ifAbsent: () => [channel],
+      groupId, (value) => [...value, channel], ifAbsent: () => [channel],
     );
   }
 
-  void unsubscribe(String id, StreamChannel<dynamic> channel) {
-    _channels[id]?.remove(channel);
+  void unsubscribe(String groupId, WebSocketChannel channel) {
+    _channels[groupId]?.remove(channel);
   }
 }

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:models/models.dart';
 
-import 'custom_exception.dart';
+import '../../custom_exception.dart';
 
 class UserRepository {
 
