@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
@@ -6,9 +7,9 @@ import 'package:database/database.dart';
 
 FutureOr<Response> onRequest(RequestContext context) async {
   switch (context.request.method) {
-    case HttpMethod.get:
     case HttpMethod.post:
       return _post(context);
+    case HttpMethod.get:
     case HttpMethod.delete:
     case HttpMethod.head:
     case HttpMethod.options:
@@ -20,17 +21,25 @@ FutureOr<Response> onRequest(RequestContext context) async {
 
 Future<Response> _post(RequestContext context) async {
   try {
-    final dataSource = await context.read<Future<DatabaseConnection>>();
+    final dataSource = context.read<DatabaseConnection>();
+    final groupName = await context.request.body();
 
-  final groupFunction = GroupFunction(dataSource.sqlConnection);
-  
-  final json = await context.request.json() as Map<String, dynamic>;
+    final group = await dataSource.groupFunction.createGroup(groupName);
 
-  await groupFunction.insert(json);
-
-  return Response.json(statusCode: HttpStatus.created);
+    return Response.json(
+      statusCode: HttpStatus.created,
+      body: group.toJson(),
+    );
   } on DatabaseException catch (e) {
-    print(e.message);
+    return Response.json(
+      statusCode: HttpStatus.internalServerError,
+      body: e.message,
+    );
+  } catch (e, stackTrace) {
+    log('Error: Route: user/create', error: e, stackTrace: stackTrace);
+    return Response.json(
+      statusCode: HttpStatus.badGateway,
+      body: 'Something went wrong, Please try again later',
+    );
   }
-  return Response.json(statusCode: HttpStatus.internalServerError);
 }

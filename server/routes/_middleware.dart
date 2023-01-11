@@ -1,10 +1,5 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
-import 'package:database/database.dart';
-
-final databaseProvider = provider<Future<DatabaseConnection>>(
-  (_) => DatabaseConnection.init(),
-);
 
 final broadcast = provider<Broadcast>((_) => Broadcast());
 

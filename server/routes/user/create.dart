@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:database/database.dart';
 
 FutureOr<Response> onRequest(RequestContext context) async {
-
   switch (context.request.method) {
     case HttpMethod.post:
       return _post(context);
@@ -21,15 +21,14 @@ FutureOr<Response> onRequest(RequestContext context) async {
 
 Future<Response> _post(RequestContext context) async {
   try {
-    final dataSource =  await context.read<Future<DatabaseConnection>>();
-    final userFunction = UserFunction(dataSource.sqlConnection);
-    final json = await context.request.json() as Map<String, Object?>;
+    final dataSource = context.read<DatabaseConnection>();
+    final name = await context.request.body();
 
-    final user = await userFunction.insert(json);
+    final user = await dataSource.userFunction.createUser(name);
 
     return Response.json(
       statusCode: HttpStatus.created,
-      body: user.rows.first.assoc(),
+      body: user,
     );
   } on FormatException catch (e) {
     return Response.json(
@@ -38,13 +37,13 @@ Future<Response> _post(RequestContext context) async {
     );
   } on DatabaseException catch (e) {
     return Response.json(
-      statusCode: HttpStatus.badGateway,
+      statusCode: HttpStatus.internalServerError,
       body: e.message,
     );
-  } catch (e) {
-    print(e);
+  } catch (e, stackTrace) {
+    log('Error: Route: user/create', error: e, stackTrace: stackTrace);
     return Response.json(
-      statusCode: HttpStatus.internalServerError,
+      statusCode: HttpStatus.badGateway,
       body: 'Something went wrong, Please try again later',
     );
   }

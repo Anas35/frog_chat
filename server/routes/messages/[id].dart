@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
@@ -20,23 +21,21 @@ FutureOr<Response> onRequest(RequestContext context, String id) async {
 
 Future<Response> _get(RequestContext context, String id) async {
   try {
-    final dataSource = await context.read<Future<DatabaseConnection>>();
-    final messageFunction = MessageFunction(dataSource.sqlConnection);
+    final dataSource = context.read<DatabaseConnection>();
 
-    final message = await messageFunction.get(id);
+    final message = await dataSource.messageFunction.getMessage(id);
 
-    return Response.json(
-      body: message.rows.first.assoc(),
-    );
-  } on DatabaseException catch (e, stackTrace) {
-    print(e.message + stackTrace.toString());
+    return Response.json(body: message);
+  } on DatabaseException catch (e) {
     return Response.json(
       statusCode: HttpStatus.internalServerError,
+      body: e.message,
     );
-  } catch (e) {
-    print(e);
+  } catch (e, stackTrace) {
+    log('Error: Route: user/create', error: e, stackTrace: stackTrace);
     return Response.json(
-      statusCode: HttpStatus.badRequest,
+      statusCode: HttpStatus.badGateway,
+      body: 'Something went wrong, Please try again later',
     );
   }
 }

@@ -1,54 +1,58 @@
 import 'package:database/src/database_connection.dart';
-import 'package:database/src/database_functions/database_functions.dart';
+import 'package:models/models.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:uuid/uuid.dart';
 
-class UserFunction extends DatabaseFunction {
+class UserFunction {
 
-  UserFunction(this.sqlConnection);
+  const UserFunction({required this.sqlConnection});
 
   final MySQLConnection sqlConnection;
 
-  Future<IResultSet> getGroupList(String userId) {
+  Future<List<Group>> getGroups(String userId) {
     return DatabaseException.wrapper(
       body: () async {
         final groupList = await sqlConnection.execute('''
           SELECT `group`.groupId, `group`.groupName from `group` 
           join participants on `group`.groupId = participants.groupId and participants.userId = unhex('$userId')
         ''');
-        return groupList;
+
+        final groups = groupList.rows.map((row) => Group.fromJson(row.assoc())).toList();
+        return groups;
       },
       message: 'Couldn\'t fetch group list',
     );
   }
 
-  @override
-  Future<IResultSet> get(String id) async {
-    return DatabaseException.wrapper<IResultSet>(
+  Future<User?> getUser(String id) async {
+    return DatabaseException.wrapper<User?>(
       body: () async {
         final user = await sqlConnection.execute("select name, hex(id) as id from `user` where id = unhex('$id')");
-        return user;
+
+        if (user.rows.isNotEmpty) {
+          return User.fromJson(user.rows.first.assoc());
+        }
+
+        return null;
       },
       message: 'Couldn\'t fetch user',
     );
   }
 
-  @override
-  Future<IResultSet> insert(Map<String, Object?> json) {
-    return DatabaseException.wrapper<IResultSet>(
+  Future<User> createUser(String name) {
+    return DatabaseException.wrapper<User>(
       body: () async {
-        final name = json['name'];
         final user = await sqlConnection.execute("select name from `user` where name = '$name'");
 
         if (user.rows.isNotEmpty) {
           throw DatabaseException('UserName already exist');
         }
 
-        final id = Uuid().v4();
+        final id = Uuid().v4().replaceAll('-', '');
 
-        await sqlConnection.execute("insert into `user`(id, name) values(UNHEX(REPLACE('$id', '-', '')), '$name')");
+        await sqlConnection.execute("insert into `user`(id, name) values(UNHEX('$id'), '$name')");
 
-        return await get(id.replaceAll('-', ''));
+        return User(id: id, name: name);
       },
       message: 'Couldn\'t create user',
     );

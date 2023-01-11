@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
@@ -18,25 +19,24 @@ FutureOr<Response> onRequest(RequestContext context, String id) async {
   }
 }
 
-Future<Response> _get(RequestContext context, String id) async {
+Future<Response> _get(RequestContext context, String groupId) async {
   try {
-    final dataSource = await context.read<Future<DatabaseConnection>>();
-    final groupFunction = GroupFunction(dataSource.sqlConnection);
-
-    final user = await groupFunction.get(id);
+    final dataSource = context.read<DatabaseConnection>();
+    final user = await dataSource.groupFunction.getGroupMessages(groupId);
 
     return Response.json(
-      body: user.rows.first.assoc(),
+      body: user,
     );
-  } on DatabaseException catch (e, stackTrace) {
-    print(e.message + stackTrace.toString());
+  } on DatabaseException catch (e) {
     return Response.json(
       statusCode: HttpStatus.internalServerError,
+      body: e.message,
     );
-  } catch (e) {
-    print(e);
+  } catch (e, stackTrace) {
+    log('Error: Route: user/create', error: e, stackTrace: stackTrace);
     return Response.json(
-      statusCode: HttpStatus.badRequest,
+      statusCode: HttpStatus.badGateway,
+      body: 'Something went wrong, Please try again later',
     );
   }
 }

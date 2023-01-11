@@ -1,57 +1,54 @@
 import 'package:database/database.dart';
-import 'package:database/src/database_functions/database_functions.dart';
+import 'package:models/models.dart';
 import 'package:mysql_client/mysql_client.dart';
 
-class MessageFunction implements DatabaseFunction {
+class MessageFunction {
   final MySQLConnection sqlConnection;
 
-  MessageFunction(this.sqlConnection);
+  MessageFunction({required this.sqlConnection});
 
-  @override
-  Future<IResultSet> get(String id) async {
-    return DatabaseException.wrapper<IResultSet>(
+  Future<dynamic> getMessage(String id) async {
+    return DatabaseException.wrapper<dynamic>(
       body: () async {
-        return await sqlConnection.execute(
-          "select id, groupId, hex(userId) as userId, message from messages where id = '$id'",
+        final result = await sqlConnection.execute(
+          "SELECT hex(`user`.`id`), `user`.name, message from `user` join messages on messages.id = '$id'",
         );
+        
+        if (result.rows.isNotEmpty) {
+          return result.rows.first.assoc();
+        }
+
+        return null;
       },
       message: 'Couldn\'t fetch message',
     );
   }
 
-  @override
-  Future<IResultSet> insert(Map<String, Object?> json) async {
-    return DatabaseException.wrapper<IResultSet>(
+  Future<String?> createMessage(Message message) async {
+    return DatabaseException.wrapper<String?>(
       body: () async {
         await sqlConnection.execute(
           'insert into messages(groupId, userId, message) values(:groupId, unhex(:userId), :message)',
-          json,
+          message.toJson(),
         );
-        return await fetchId(json['groupId']! as String);
+
+        return _fetchNewId();
       },
       message: 'Couldn\'t save message to database',
     );
   }
 
-  Future<IResultSet> fetchId(String groupId) async {
-    return DatabaseException.wrapper<IResultSet>(
+  Future<String?> _fetchNewId() async {
+    return DatabaseException.wrapper<String?>(
       body: () async {
-        return await sqlConnection.execute(
+        final result = await sqlConnection.execute("SELECT LAST_INSERT_ID()");
+        return result.rows.first.colByName("LAST_INSERT_ID()");
+        /*return await sqlConnection.execute(
           "select id from messages where groupId = '$groupId' order by id desc LIMIT 1",
-        );
+        );*/
       },
-      message: 'Couldn\'t fetch message',
+      message: 'Couldn\'t fetch last inserted Id',
     );
   }
 
-  Future<IResultSet> fetchAll(String groupId) async {
-    return DatabaseException.wrapper<IResultSet>(
-      body: () async {
-        return await sqlConnection.execute(
-          "select id from messages where groupId = '$groupId'",
-        );
-      },
-      message: 'Couldn\'t fetch message',
-    );
-  }
 }

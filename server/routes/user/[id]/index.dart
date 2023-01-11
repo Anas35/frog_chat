@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:database/database.dart';
 
-FutureOr<Response> onRequest(RequestContext context, String id) async {
+FutureOr<Response> onRequest(RequestContext context, String userId) async {
   switch (context.request.method) {
     case HttpMethod.get:
-      return _get(context, id);
+      return _get(context, userId);
     case HttpMethod.post:
     case HttpMethod.delete:
     case HttpMethod.head:
@@ -18,23 +19,19 @@ FutureOr<Response> onRequest(RequestContext context, String id) async {
   }
 }
 
-Future<Response> _get(RequestContext context, String id) async {
+Future<Response> _get(RequestContext context, String userId) async {
   try {
-    final dataSource = await context.read<Future<DatabaseConnection>>();
-    final userFunction = UserFunction(dataSource.sqlConnection);
+    final dataSource = context.read<DatabaseConnection>();
+    final user = await dataSource.userFunction.getUser(userId);
 
-    final user = await userFunction.get(id);
-
-    return Response.json(
-      body: user.rows.first.assoc(),
-    );
-  } on DatabaseException catch (e, stackTrace) {
-    print(e.message + stackTrace.toString());
+    return Response.json(body: user);
+  } on DatabaseException catch (e) {
     return Response.json(
       statusCode: HttpStatus.internalServerError,
+      body: e.message,
     );
-  } catch (e) {
-    print(e);
+  } catch (e, stackTrace) {
+    log('Error: Route: user/$userId/groups', error: e, stackTrace: stackTrace);
     return Response.json(
       statusCode: HttpStatus.badRequest,
     );

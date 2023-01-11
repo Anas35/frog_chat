@@ -21,16 +21,10 @@ FutureOr<Response> onRequest(RequestContext context, String userId) async {
 
 Future<Response> _get(RequestContext context, String userId) async {
   try {
-    final dataSource = await context.read<Future<DatabaseConnection>>();
-    final userFunction = UserFunction(dataSource.sqlConnection);
+    final dataSource = context.read<DatabaseConnection>();
+    final groups = await dataSource.userFunction.getGroups(userId);
 
-    final user = await userFunction.getGroupList(userId);
-
-    final groups = user.rows.map((row) => row.assoc()).toList();
-
-    return Response.json(
-      body: groups,
-    );
+    return Response.json(body: groups);
   } on DatabaseException catch (e) {
     return Response.json(
       statusCode: HttpStatus.internalServerError,
