@@ -22,7 +22,7 @@ FutureOr<Response> onRequest(RequestContext context, String userId) async {
 Future<Response> _get(RequestContext context, String userId) async {
   try {
     final dataSource = context.read<DatabaseConnection>();
-    final groups = await dataSource.userFunction.getGroups(userId);
+    final groups = await dataSource.getGroups(userId);
 
     return Response.json(body: groups);
   } on DatabaseException catch (e) {

@@ -1,11 +1,7 @@
 import 'package:database/database.dart';
 import 'package:models/models.dart';
-import 'package:mysql_client/mysql_client.dart';
 
-class MessageFunction {
-  final MySQLConnection sqlConnection;
-
-  MessageFunction({required this.sqlConnection});
+mixin MessageFunction on SqlConnection {
 
   Future<dynamic> getMessage(String id) async {
     return DatabaseException.wrapper<dynamic>(

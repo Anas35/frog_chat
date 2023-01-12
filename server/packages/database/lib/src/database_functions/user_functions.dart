@@ -1,13 +1,8 @@
 import 'package:database/src/database_connection.dart';
 import 'package:models/models.dart';
-import 'package:mysql_client/mysql_client.dart';
 import 'package:uuid/uuid.dart';
 
-class UserFunction {
-
-  const UserFunction({required this.sqlConnection});
-
-  final MySQLConnection sqlConnection;
+mixin UserFunction on SqlConnection {
 
   Future<List<Group>> getGroups(String userId) {
     return DatabaseException.wrapper(

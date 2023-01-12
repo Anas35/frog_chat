@@ -25,7 +25,7 @@ Future<Response> _post(RequestContext context) async {
     final dataSource = context.read<DatabaseConnection>();
     final json = await context.request.json() as Map<String, dynamic>;
 
-    await dataSource.groupFunction.joinGroup(Participants.fromJson(json));
+    await dataSource.joinGroup(Participants.fromJson(json));
 
     return Response.json();
   } on DatabaseException catch (e) {

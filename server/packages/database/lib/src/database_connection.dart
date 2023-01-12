@@ -24,10 +24,11 @@ class DatabaseException implements Exception {
   }
 }
 
-class DatabaseConnection {
-  late final MySQLConnection sqlConnection;
+class DatabaseConnection extends SqlConnection with UserFunction, GroupFunction, MessageFunction {}
 
-  DatabaseConnection();
+class SqlConnection {
+
+  late final MySQLConnection sqlConnection;
 
   Future<void> init() async {
     try {
@@ -53,7 +54,4 @@ class DatabaseConnection {
     }
   }
 
-  late final userFunction = UserFunction(sqlConnection: sqlConnection);
-  late final groupFunction = GroupFunction(sqlConnection: sqlConnection);
-  late final messageFunction = MessageFunction(sqlConnection: sqlConnection);
 }

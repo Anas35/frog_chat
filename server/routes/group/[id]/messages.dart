@@ -22,7 +22,7 @@ FutureOr<Response> onRequest(RequestContext context, String id) async {
 Future<Response> _get(RequestContext context, String groupId) async {
   try {
     final dataSource = context.read<DatabaseConnection>();
-    final user = await dataSource.groupFunction.getGroupMessages(groupId);
+    final user = await dataSource.getGroupMessages(groupId);
 
     return Response.json(
       body: user,

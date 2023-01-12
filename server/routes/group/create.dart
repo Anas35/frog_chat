@@ -24,7 +24,7 @@ Future<Response> _post(RequestContext context) async {
     final dataSource = context.read<DatabaseConnection>();
     final groupName = await context.request.body();
 
-    final group = await dataSource.groupFunction.createGroup(groupName);
+    final group = await dataSource.createGroup(groupName);
 
     return Response.json(
       statusCode: HttpStatus.created,

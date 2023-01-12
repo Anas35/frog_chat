@@ -23,7 +23,7 @@ Future<Response> _get(RequestContext context, String id) async {
   try {
     final dataSource = context.read<DatabaseConnection>();
 
-    final message = await dataSource.messageFunction.getMessage(id);
+    final message = await dataSource.getMessage(id);
 
     return Response.json(body: message);
   } on DatabaseException catch (e) {

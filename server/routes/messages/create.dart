@@ -25,9 +25,7 @@ Future<Response> _post(RequestContext context) async {
     final dataSource = context.read<DatabaseConnection>();
     final json = await context.request.json() as Map<String, dynamic>;
 
-    final result = await dataSource.messageFunction.createMessage(
-      Message.fromJson(json),
-    );
+    final result = await dataSource.createMessage(Message.fromJson(json));
 
     return Response.json(
       statusCode: HttpStatus.created,

@@ -24,7 +24,7 @@ Future<Response> _post(RequestContext context) async {
     final dataSource = context.read<DatabaseConnection>();
     final name = await context.request.body();
 
-    final user = await dataSource.userFunction.createUser(name);
+    final user = await dataSource.createUser(name);
 
     return Response.json(
       statusCode: HttpStatus.created,

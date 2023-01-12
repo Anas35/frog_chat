@@ -22,7 +22,7 @@ FutureOr<Response> onRequest(RequestContext context, String userId) async {
 Future<Response> _get(RequestContext context, String userId) async {
   try {
     final dataSource = context.read<DatabaseConnection>();
-    final user = await dataSource.userFunction.getUser(userId);
+    final user = await dataSource.getUser(userId);
 
     return Response.json(body: user);
   } on DatabaseException catch (e) {
@@ -31,9 +31,10 @@ Future<Response> _get(RequestContext context, String userId) async {
       body: e.message,
     );
   } catch (e, stackTrace) {
-    log('Error: Route: user/$userId/groups', error: e, stackTrace: stackTrace);
+    log('Error: Route: user/$userId', error: e, stackTrace: stackTrace);
     return Response.json(
       statusCode: HttpStatus.badRequest,
+      body: '$e $stackTrace',
     );
   }
 }

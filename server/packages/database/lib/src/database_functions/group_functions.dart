@@ -2,13 +2,8 @@ import 'dart:math';
 
 import 'package:database/database.dart';
 import 'package:models/models.dart';
-import 'package:mysql_client/mysql_client.dart';
 
-class GroupFunction {
-
-  final MySQLConnection sqlConnection;
-
-  GroupFunction({required this.sqlConnection});
+mixin GroupFunction on SqlConnection {
 
   Future<List<dynamic>> getGroupMessages(String groupId) async {
     return DatabaseException.wrapper<List<dynamic>>(
