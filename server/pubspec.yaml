@@ -7,17 +7,16 @@ environment:
   sdk: ">=2.18.0 <3.0.0"
 
 dependencies:
-  broadcast_bloc: ^0.1.0-dev.1
+  broadcast:
+    path: ./packages/broadcast
   dart_frog: ^0.3.0
   dart_frog_web_socket: ^0.1.0-dev.1
   database:
     path: ./packages/database
-  equatable: ^2.0.5
   models:
     git:
       url: https://github.com/Anas35/socket_chat.git
       path: ./models
-  stream_channel: ^2.1.1
 
 dev_dependencies:
   mocktail: ^0.3.0
