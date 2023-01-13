@@ -12,11 +12,7 @@ class User with _$User {
     required String id,
     required String name,
     @Default([]) List<Group> groups,
-  }) = UserData;
-
-  const factory User.empty() = UserEmpty;
-
-  const factory User.name({required String name}) = UserWithName;
+  }) = _UserData;
 
   factory User.fromJson(Map<String, Object?> json) => _$UserFromJson(json);
 
