@@ -25,7 +25,7 @@ Future<Response> _get(RequestContext context, String id) async {
 
     final message = await dataSource.getMessage(id);
 
-    return Response.json(body: message);
+    return Response.json(body: message?.toJson());
   } on DatabaseException catch (e) {
     return Response.json(
       statusCode: HttpStatus.internalServerError,

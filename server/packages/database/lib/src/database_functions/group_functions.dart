@@ -5,11 +5,11 @@ import 'package:models/models.dart';
 
 mixin GroupFunction on SqlConnection {
 
-  Future<List<dynamic>> getGroupMessages(String groupId) async {
-    return DatabaseException.wrapper<List<dynamic>>(
+  Future<List<MessageDetails>> getGroupMessages(String groupId) async {
+    return DatabaseException.wrapper<List<MessageDetails>>(
       body: () async {
         final messages = await sqlConnection.execute("SELECT hex(`user`.`id`), `user`.name, message from `user` join messages on messages.groupId = '$groupId'");
-        final list = messages.rows.map((row) => row.assoc()).toList();
+        final list = messages.rows.map((row) => MessageDetails.fromJson(row.assoc())).toList();
         return list;
       },
       message: "Couldn't fetch Group Messages",

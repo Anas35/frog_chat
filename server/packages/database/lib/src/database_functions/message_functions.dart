@@ -3,15 +3,15 @@ import 'package:models/models.dart';
 
 mixin MessageFunction on SqlConnection {
 
-  Future<dynamic> getMessage(String id) async {
-    return DatabaseException.wrapper<dynamic>(
+  Future<MessageDetails?> getMessage(String id) async {
+    return DatabaseException.wrapper<MessageDetails?>(
       body: () async {
         final result = await sqlConnection.execute(
           "SELECT hex(`user`.`id`), `user`.name, message from `user` join messages on messages.id = '$id'",
         );
         
         if (result.rows.isNotEmpty) {
-          return result.rows.first.assoc();
+          return MessageDetails.fromJson(result.rows.first.assoc());
         }
 
         return null;

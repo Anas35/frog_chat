@@ -22,10 +22,10 @@ FutureOr<Response> onRequest(RequestContext context, String id) async {
 Future<Response> _get(RequestContext context, String groupId) async {
   try {
     final dataSource = context.read<DatabaseConnection>();
-    final user = await dataSource.getGroupMessages(groupId);
+    final messages = await dataSource.getGroupMessages(groupId);
 
     return Response.json(
-      body: user,
+      body: messages.map((message) => message.toJson()),
     );
   } on DatabaseException catch (e) {
     return Response.json(
