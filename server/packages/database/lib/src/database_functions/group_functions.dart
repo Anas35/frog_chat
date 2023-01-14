@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:database/database.dart';
+import 'package:database/src/sql_connection.dart';
 import 'package:models/models.dart';
 
 mixin GroupFunction on SqlConnection {
@@ -16,13 +17,16 @@ mixin GroupFunction on SqlConnection {
     );
   }
 
-  Future<void> joinGroup(Participants participants) async {
-    return DatabaseException.wrapper<void>(
+  Future<Group> joinGroup(Participants participants) async {
+    return DatabaseException.wrapper<Group>(
       body: () async {
         await sqlConnection.execute(
           "insert into participants(groupId, userId) values(:groupId, unhex(:userId))",
           participants.toJson(),
         );
+
+        final group = await sqlConnection.execute("select * from `group` where groupId = '${participants.groupId}'");
+        return Group.fromJson(group.rows.first.assoc());
       },
       message: "Couldn't fetch Group",
     );

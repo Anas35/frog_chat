@@ -1,4 +1,5 @@
 import 'package:database/database.dart';
+import 'package:database/src/sql_connection.dart';
 import 'package:models/models.dart';
 
 mixin MessageFunction on SqlConnection {

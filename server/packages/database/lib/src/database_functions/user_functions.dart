@@ -1,5 +1,6 @@
-import 'package:database/src/database_connection.dart';
+import 'package:database/database.dart';
 import 'package:models/models.dart';
+import 'package:database/src/sql_connection.dart';
 import 'package:uuid/uuid.dart';
 
 mixin UserFunction on SqlConnection {
@@ -19,16 +20,16 @@ mixin UserFunction on SqlConnection {
     );
   }
 
-  Future<User?> getUser(String id) async {
-    return DatabaseException.wrapper<User?>(
+  Future<User> getUser(String id) async {
+    return DatabaseException.wrapper<User>(
       body: () async {
         final user = await sqlConnection.execute("select name, hex(id) as id from `user` where id = unhex('$id')");
 
-        if (user.rows.isNotEmpty) {
-          return User.fromJson(user.rows.first.assoc());
+        if (user.rows.isEmpty) {
+          throw DatabaseException('No User exist');
         }
 
-        return null;
+        return User.fromJson(user.rows.first.assoc());
       },
       message: 'Couldn\'t fetch user',
     );
