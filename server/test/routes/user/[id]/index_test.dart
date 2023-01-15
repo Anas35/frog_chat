@@ -102,15 +102,15 @@ void main() {
     });
 
     test('return a null if user not exist', () async {
-      when(() => database.getUser(any())).thenAnswer(
-        (_) async => null,
+      when(() => database.getUser(any())).thenThrow(
+        const DatabaseException('No User exist'),
       );
       when(() => request.method).thenReturn(HttpMethod.get);
 
       final response = await route.onRequest(context, id);
 
-      expect(response.statusCode, equals(HttpStatus.ok));
-      await expectLater(response.body(), completion(isEmpty));
+      expect(response.statusCode, equals(HttpStatus.internalServerError));
+      await expectLater(response.body(), completion(equals('"No User exist"')));
 
       verify(() => database.getUser(id)).called(1);
     });

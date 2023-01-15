@@ -9,8 +9,10 @@ mixin GroupFunction on SqlConnection {
   Future<List<MessageDetails>> getGroupMessages(String groupId) async {
     return DatabaseException.wrapper<List<MessageDetails>>(
       body: () async {
-        final messages = await sqlConnection.execute("SELECT hex(`user`.`id`), `user`.name, message from `user` join messages on messages.groupId = '$groupId'");
-        final list = messages.rows.map((row) => MessageDetails.fromJson(row.assoc())).toList();
+        final messages = await sqlConnection.execute("SELECT hex(`user`.`id`) as id, `user`.name as name, message from `user` join messages on messages.groupId = '$groupId'");
+        final list = messages.rows.map((row) {
+          return MessageDetails(user: User.fromJson(row.assoc()), message: row.assoc()['message']!);
+        }).toList();
         return list;
       },
       message: "Couldn't fetch Group Messages",
@@ -28,7 +30,7 @@ mixin GroupFunction on SqlConnection {
         final group = await sqlConnection.execute("select * from `group` where groupId = '${participants.groupId}'");
         return Group.fromJson(group.rows.first.assoc());
       },
-      message: "Couldn't fetch Group",
+      message: "Failed to join Group",
     );
   }
 

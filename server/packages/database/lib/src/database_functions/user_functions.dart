@@ -26,12 +26,12 @@ mixin UserFunction on SqlConnection {
         final user = await sqlConnection.execute("select name, hex(id) as id from `user` where id = unhex('$id')");
 
         if (user.rows.isEmpty) {
-          throw DatabaseException('No User exist');
+          throw 'No User exist';
         }
 
         return User.fromJson(user.rows.first.assoc());
       },
-      message: 'Couldn\'t fetch user',
+      message: 'Failed to fetch user',
     );
   }
 
@@ -41,7 +41,7 @@ mixin UserFunction on SqlConnection {
         final user = await sqlConnection.execute("select name from `user` where name = '$name'");
 
         if (user.rows.isNotEmpty) {
-          throw DatabaseException('UserName already exist');
+          throw 'UserName already exist';
         }
 
         final id = Uuid().v4().replaceAll('-', '');
@@ -50,7 +50,7 @@ mixin UserFunction on SqlConnection {
 
         return User(id: id, name: name);
       },
-      message: 'Couldn\'t create user',
+      message: 'Failed to create user',
     );
   }
 

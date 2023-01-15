@@ -8,11 +8,14 @@ mixin MessageFunction on SqlConnection {
     return DatabaseException.wrapper<MessageDetails?>(
       body: () async {
         final result = await sqlConnection.execute(
-          "SELECT hex(`user`.`id`), `user`.name, message from `user` join messages on messages.id = '$id'",
+          "SELECT hex(`user`.`id`) as id, `user`.name, message from `user` join messages on messages.id = '$id'",
         );
         
         if (result.rows.isNotEmpty) {
-          return MessageDetails.fromJson(result.rows.first.assoc());
+          final row = result.rows.first;
+          final user = User.fromJson(row.assoc());
+
+          return MessageDetails(user: user, message: row.assoc()['message']!);
         }
 
         return null;
@@ -21,30 +24,17 @@ mixin MessageFunction on SqlConnection {
     );
   }
 
-  Future<String?> createMessage(Message message) async {
-    return DatabaseException.wrapper<String?>(
+  Future<String> createMessage(Message message) async {
+    return DatabaseException.wrapper<String>(
       body: () async {
-        await sqlConnection.execute(
+        final result = await sqlConnection.execute(
           'insert into messages(groupId, userId, message) values(:groupId, unhex(:userId), :message)',
           message.toJson(),
         );
 
-        return _fetchNewId();
+        return result.lastInsertID.toString();
       },
       message: 'Couldn\'t save message to database',
-    );
-  }
-
-  Future<String?> _fetchNewId() async {
-    return DatabaseException.wrapper<String?>(
-      body: () async {
-        final result = await sqlConnection.execute("SELECT LAST_INSERT_ID()");
-        return result.rows.first.colByName("LAST_INSERT_ID()");
-        /*return await sqlConnection.execute(
-          "select id from messages where groupId = '$groupId' order by id desc LIMIT 1",
-        );*/
-      },
-      message: 'Couldn\'t fetch last inserted Id',
     );
   }
 

@@ -9,10 +9,13 @@ class DatabaseException implements Exception {
     try {
       final result = await body();
       return result;
+    } on StateError catch (e) {
+      throw DatabaseException('StateError: ${e.message}');
     } on MySQLException catch (e) {
-      throw DatabaseException(e.message);
+      throw DatabaseException('MySqlException ${e.message}');
     } catch (e) {
-      throw DatabaseException('message: $e');
+      print(e);
+      throw e is String ? DatabaseException(e) : DatabaseException(message);
     }
   }
 }

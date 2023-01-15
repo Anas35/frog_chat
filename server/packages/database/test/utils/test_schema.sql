@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS testDb;
+
+USE testDb;
+
 CREATE TABLE IF NOT EXISTS `Group` (
     groupId varchar(7) primary key not null,
     groupName varchar(10)
