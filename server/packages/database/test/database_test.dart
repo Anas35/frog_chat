@@ -21,9 +21,10 @@ void main() {
 
   /// Base test that connect database and perform queries
   group('Database Test', () {
-
     late User user;
+    late User user2;
     late Group grp;
+    late final String messageId;
 
     /// Connect Database and initialize the schema
     setUpAll(() async {
@@ -32,13 +33,14 @@ void main() {
         await database.initializeTable();
 
         user = await database.createUser('user');
-        grp = await database.createGroup('group');
+        user2 = await database.createUser('user2');
+
+        grp = await database.createGroup('group', user2.id);
       });
     });
 
     /// Test all the queries that depends on UserFunction
     group('user', () {
-
       test('user is inserted User Table', () async {
         await expectLater(user.name, 'user');
       });
@@ -80,11 +82,16 @@ void main() {
     /// Test all the queries that depends on GroupFunction
 
     group('group', () {
-
       test('Create new group', () async {
         expect(grp.groupId, isNotEmpty);
         expect(grp.groupId.length, equals(6));
         expect(grp.groupName, 'group');
+      });
+
+      test('User2 should be in Groups', () async {
+        final groups = await database.getGroups(user2.id);
+        expect(groups, isNotEmpty);
+        expect(groups.length, equals(1));
       });
 
       test('Join group', () async {
@@ -109,14 +116,11 @@ void main() {
     /// Test all the queries that depends on MessageFunction
 
     group('message', () {
-
-      late String messageId;
-
       setUpAll(() async {
         return Future<void>(() async {
-        messageId = await database.createMessage(
-          Message(groupId: grp.groupId, userId: user.id, message: 'Hello!')
-        );
+          messageId = await database.createMessage(
+            Message(groupId: grp.groupId, userId: user.id, message: 'Hello!'),
+          );
         });
       });
 
@@ -132,9 +136,8 @@ void main() {
       });
 
       test('messages should not be empty', () async {
-          final messages = await database.getGroupMessages(grp.groupId);
-          expect(messages, isNotEmpty);
-          expect(messages.length, equals(1));
+        final messages = await database.getGroupMessages(grp.groupId);
+        expect(messages, isNotEmpty);
       });
     });
 

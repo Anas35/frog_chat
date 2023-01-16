@@ -22,9 +22,12 @@ FutureOr<Response> onRequest(RequestContext context) async {
 Future<Response> _post(RequestContext context) async {
   try {
     final dataSource = context.read<DatabaseConnection>();
-    final groupName = await context.request.body();
+    final body = await context.request.json() as Map<String, String?>;
 
-    final group = await dataSource.createGroup(groupName);
+    final group = await dataSource.createGroup(
+      body['groupName']!, 
+      body['userId']!,
+    );
 
     return Response.json(
       statusCode: HttpStatus.created,
@@ -32,7 +35,7 @@ Future<Response> _post(RequestContext context) async {
     );
   } on DatabaseException catch (e) {
     return Response.json(
-      statusCode: HttpStatus.internalServerError,
+    statusCode: HttpStatus.internalServerError,
       body: e.message,
     );
   } catch (e, stackTrace) {

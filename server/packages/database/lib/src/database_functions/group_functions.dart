@@ -34,12 +34,15 @@ mixin GroupFunction on SqlConnection {
     );
   }
 
-  Future<Group> createGroup(String groupName) async {
+  Future<Group> createGroup(String groupName, String userId) async {
     return DatabaseException.wrapper<Group>(
       body: () async {
         final groupId = _generatedGroupId;
         await sqlConnection.execute(
           "insert into `group`(groupId, groupName) values('$groupId', '$groupName')",
+        );
+        await sqlConnection.execute(
+          "insert into participants(groupId, userId) values('$groupId', unhex('$userId'))",
         );
         return Group(groupId: groupId, groupName: groupName);
       },

@@ -18,7 +18,7 @@ class MockDatabase extends DatabaseConnection {
       port: int.parse(String.fromEnvironment("port")),
       userName: String.fromEnvironment("userName"),
       password: String.fromEnvironment("password"),
-      secure: false
+      secure: false,
     );
 
     await sqlConnection.connect();
