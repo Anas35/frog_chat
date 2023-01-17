@@ -33,6 +33,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  chat_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/chat_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   clock:
     dependency: transitive
     description:
@@ -77,10 +84,10 @@ packages:
     dependency: transitive
     description:
       name: dart_frog
-      sha256: "0e7bcc995512af621fb3ec00303fc033580aaabf795eddf76f4d99c62709a5d9"
+      sha256: a2e886367e5cef7a2c7b56c96d5f8491afad422359e2bfd4d8e6319d677c061b
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.2"
   dart_frog_web_socket:
     dependency: "direct main"
     description:
@@ -160,6 +167,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  group_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/group_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   hotreloader:
     dependency: transitive
     description:
@@ -192,14 +206,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  intl:
-    dependency: transitive
-    description:
-      name: intl
-      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.17.0"
   js:
     dependency: transitive
     description:
@@ -260,18 +266,16 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: "52e38f7e1143ef39daf532117d6b8f8f617bf4bcd6044ed8c29040d20d269630"
+      sha256: e4ff8e8564c03f255408decd16e7899da1733852a9110a58fe6d1b817684a63e
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   models:
     dependency: "direct main"
     description:
-      path: models
-      ref: HEAD
-      resolved-ref: b39dfb196d29a9623c7611e6da418da0ba6362b3
-      url: "https://github.com/Anas35/socket_chat.git"
-    source: git
+      path: "../models"
+      relative: true
+    source: path
     version: "1.0.0"
   nested:
     dependency: transitive
@@ -349,10 +353,10 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: "76917b7d4b9526b2ba416808a7eb9fb2863c1a09cf63ec85f1453da240fa818a"
+      sha256: "95688ad7fc320f8566f28e2ee91b6743c10b433ccc262f6469f3007f2aa62e78"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.15"
+    version: "2.0.16"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -361,11 +365,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.14"
-  shared_preferences_ios:
+  shared_preferences_foundation:
     dependency: transitive
     description:
-      name: shared_preferences_ios
-      sha256: "585a14cefec7da8c9c2fb8cd283a3bb726b4155c0952afe6a0caaa7b2272de34"
+      name: shared_preferences_foundation
+      sha256: f451880807c86a6d4591642c8250ee17197cabef8536f072d3c44013dca44e04
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
@@ -377,14 +381,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  shared_preferences_macos:
-    dependency: transitive
-    description:
-      name: shared_preferences_macos
-      sha256: fbb94bf296576f49be37a1496d5951796211a8db0aa22cc0d68c46440dad808c
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.4"
   shared_preferences_platform_interface:
     dependency: transitive
     description:
@@ -421,10 +417,10 @@ packages:
     dependency: transitive
     description:
       name: shelf_hotreload
-      sha256: "09ebdbd6a33b5fabe4ceb4893d4214320256216eeb3c1b6945a9e7b8a58c11d6"
+      sha256: "5e7a68273d64a095384325d769c6a4885ea15c6aafee361098c0d8a5ecb5dcf6"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.0"
+    version: "1.4.0"
   shelf_static:
     dependency: transitive
     description:
@@ -510,6 +506,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  user_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/user_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   vector_math:
     dependency: transitive
     description:
@@ -538,10 +541,10 @@ packages:
     dependency: transitive
     description:
       name: web_socket_channel
-      sha256: "3a969ddcc204a3e34e863d204b29c0752716f78b6f9cc8235083208d268a4ccd"
+      sha256: ca49c0bc209c687b887f30527fb6a9d80040b072cc2990f34b9bec3e7663101b
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   win32:
     dependency: transitive
     description:
@@ -554,10 +557,10 @@ packages:
     dependency: transitive
     description:
       name: xdg_directories
-      sha256: "11541eedefbcaec9de35aa82650b695297ce668662bbd6e3911a7fabdbde589f"
+      sha256: bd512f03919aac5f1313eb8249f223bacf4927031bf60b02601f81f687689e86
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0+2"
+    version: "0.2.0+3"
 sdks:
   dart: ">=2.19.0-444.2.beta <4.0.0"
   flutter: ">=3.0.0"

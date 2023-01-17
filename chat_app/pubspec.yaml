@@ -36,13 +36,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http: ^0.13.5
+  group_repository:
+    path: ./packages/group_repository
+  chat_repository:
+    path: ./packages/chat_repository
   models:
-    git:
-      url: https://github.com/Anas35/socket_chat.git
-      path: ./models
+    path: ../models
   shared_preferences: ^2.0.15
   flutter_bloc: ^8.1.1
   equatable: ^2.0.5
+  user_repository:
+    path: ./packages/user_repository
   dart_frog_web_socket: ^0.1.0-dev.2
   
 

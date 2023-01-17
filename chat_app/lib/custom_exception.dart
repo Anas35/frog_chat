@@ -4,3 +4,9 @@ class HttpRequestException implements Exception {
 
   HttpRequestException(this.message);
 }
+
+enum Status {
+  loading,
+  success,
+  failed, initial,
+}

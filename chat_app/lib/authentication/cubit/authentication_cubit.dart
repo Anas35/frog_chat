@@ -1,8 +1,8 @@
 import 'package:chat_app/custom_exception.dart';
-import 'package:chat_app/user_details/repository/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
+import 'package:user_repository/user_repository.dart';
 
 part 'authentication_state.dart';
 

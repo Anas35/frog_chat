@@ -1,7 +1,7 @@
 import 'package:chat_app/current_user/repository/current_user_repository.dart';
-import 'package:chat_app/user_details/repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
+import 'package:user_repository/user_repository.dart';
 
 ///TODO migrate to HydrateBloc?
 class CurrentUserCubit extends Cubit<User?> {

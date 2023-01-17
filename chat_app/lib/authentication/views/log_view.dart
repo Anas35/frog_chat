@@ -1,6 +1,6 @@
 import 'package:chat_app/authentication/authentication.dart';
 import 'package:chat_app/current_user/current_user.dart';
-import 'package:chat_app/page/home_page.dart';
+import 'package:chat_app/home_page.dart';
 import 'package:chat_app/widgets/re_button.dart';
 import 'package:chat_app/widgets/re_text_field.dart';
 import 'package:flutter/material.dart';

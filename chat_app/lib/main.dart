@@ -1,4 +1,3 @@
-import 'package:chat_app/chat_room/cubit/chat_room_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +23,6 @@ class MyApp extends StatelessWidget {
               currentUserRepository: RepositoryProvider.of<CurrentUserRepository>(context),
             )..init(),
           ),
-          BlocProvider<ChatRoomCubit>(create: (context) => ChatRoomCubit()),
         ],
         child: MaterialApp(
           title: 'Socket Chat',
