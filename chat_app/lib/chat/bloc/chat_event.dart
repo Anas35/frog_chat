@@ -9,6 +9,16 @@ abstract class ChatEvent  extends Equatable {
 
 class PreMessagesEvent extends ChatEvent {}
 
+class _GetMessageEvent extends ChatEvent {
+
+  final String messageId;
+
+  const _GetMessageEvent({required this.messageId});
+  
+  @override
+  List<Object?> get props => [messageId];
+}
+
 class AddMessageEvent extends ChatEvent {
 
   final String message;

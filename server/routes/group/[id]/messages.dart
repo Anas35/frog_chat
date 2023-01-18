@@ -25,7 +25,7 @@ Future<Response> _get(RequestContext context, String groupId) async {
     final messages = await dataSource.getGroupMessages(groupId);
 
     return Response.json(
-      body: messages.map((message) => message.toJson()),
+      body: messages.map((message) => message.toJson()).toList(),
     );
   } on DatabaseException catch (e) {
     return Response.json(
@@ -33,7 +33,7 @@ Future<Response> _get(RequestContext context, String groupId) async {
       body: e.message,
     );
   } catch (e, stackTrace) {
-    log('Error: Route: user/create', error: e, stackTrace: stackTrace);
+    log('Error: Route: group/[index]/message', error: e, stackTrace: stackTrace);
     return Response.json(
       statusCode: HttpStatus.badGateway,
       body: 'Something went wrong, Please try again later',

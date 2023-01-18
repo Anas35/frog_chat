@@ -47,8 +47,10 @@ class GroupRepository {
     if (response.statusCode != 200) {
       throw GroupException(response.body);
     } else {
-      final result = jsonDecode(response.body) as List<Map<String, Object?>>;
-      final messages = result.map(MessageDetails.fromJson).toList();
+      final result = jsonDecode(response.body) as List<dynamic>;
+      final messages = result.map(
+        (message) => MessageDetails.fromJson(message as Map<String, dynamic>),
+      ).toList();
       return messages;
     }
   }

@@ -24,12 +24,15 @@ mixin UserFunction on SqlConnection {
     return DatabaseException.wrapper<User>(
       body: () async {
         final user = await sqlConnection.execute("select name, hex(id) as id from `user` where id = unhex('$id')");
+        final groups = await getGroups(id);
 
         if (user.rows.isEmpty) {
           throw 'No User exist';
         }
 
-        return User.fromJson(user.rows.first.assoc());
+        final userI = User.fromJson(user.rows.first.assoc()).copyWith(groups: groups);
+
+        return userI;
       },
       message: 'Failed to fetch user',
     );

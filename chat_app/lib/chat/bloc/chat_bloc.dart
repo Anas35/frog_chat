@@ -18,13 +18,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   super(const ChatState()) {
     on<PreMessagesEvent>(_onPreMessagesEvent);
     on<AddMessageEvent>(_onAddMessageEvent);
+    on<_GetMessageEvent>(_onGetMessageEvent);
   }
 
   final ChatRepository _chatRepository;
   final GroupRepository _groupRepository;
   StreamSubscription? _streamSubscription;
 
-  FutureOr<void> _onPreMessagesEvent(
+  Future<void> _onPreMessagesEvent(
     PreMessagesEvent event,
     Emitter<ChatState> emit,
   ) async {
@@ -37,18 +38,38 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
 
-      _streamSubscription = _chatRepository.messages.listen((id) async {
-        final message = await _chatRepository.getMessage(id);
-        emit(
-          state.copyWith(
-            chatStatus: ChatStatus.loaded, messages: List.from(state.messages)..add(message),
-          ),
-        );
+      _streamSubscription = _chatRepository.messages.listen((id) {
+        add(_GetMessageEvent(messageId: id));
       });
 
-    } catch (e) {
+    } on GroupException catch (e) {
       emit(state.copyWith(
         chatStatus: ChatStatus.failed,
+        errorMessage: e.message,
+      ));
+    } catch (e, stck) {
+      print(stck);
+      emit(state.copyWith(
+        chatStatus: ChatStatus.failed,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onGetMessageEvent(
+    _GetMessageEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      final message = await _chatRepository.getMessage(event.messageId);
+      emit(
+        state.copyWith(
+          chatStatus: ChatStatus.loaded, messages: List.from(state.messages)..add(message),
+        ),
+      );
+    } catch (e) {
+      print(e);
+      emit(state.copyWith(
         errorMessage: e.toString(),
       ));
     }

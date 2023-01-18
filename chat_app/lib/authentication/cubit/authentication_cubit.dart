@@ -28,6 +28,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     } on HttpRequestException catch (e) {
       emit(state.copyWith(errorMessage: e.message));
     } catch (e) {
+      print(e);
       emit(state.copyWith(errorMessage: 'Unhandled error'));
     }
   }

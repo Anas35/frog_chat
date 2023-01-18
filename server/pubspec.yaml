@@ -14,9 +14,7 @@ dependencies:
   database:
     path: ./packages/database
   models:
-    git:
-      url: https://github.com/Anas35/socket_chat.git
-      path: ./models
+    path: ../models
 
 dev_dependencies:
   mocktail: ^0.3.0

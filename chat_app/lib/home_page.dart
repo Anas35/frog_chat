@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                         context,
                         CreateGroupPage.route(),
                       );
-                      ///TODO
+                      context.read<CurrentUserCubit>().addGroup(group);
                     },
                     text: 'Create group',
                   ),
@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
                         context,
                         JoinGroupPage.route(),
                       );
-                      ///TODO
+                      context.read<CurrentUserCubit>().addGroup(group);
                     },
                     text: 'Join group',
                   ),

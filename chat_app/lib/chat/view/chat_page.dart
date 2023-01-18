@@ -18,8 +18,9 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ChatBloc(groupId: group.groupId)..add(PreMessagesEvent()),
-      child: const Scaffold(
-        body: ChatView(),
+      child: Scaffold(
+        appBar: AppBar(),
+        body: const ChatView(),
       ),
     );
   }    
@@ -35,7 +36,6 @@ class ChatView extends StatelessWidget {
       builder: (context, state) {
         switch (state.chatStatus) {
           case ChatStatus.initial:
-            context.read<ChatBloc>().add(PreMessagesEvent());
             return const Center(
               child: CircularProgressIndicator(),
             );

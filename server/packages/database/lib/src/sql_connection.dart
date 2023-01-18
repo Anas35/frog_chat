@@ -14,7 +14,7 @@ class SqlConnection {
     try {
       final env = DotEnv()..load();
 
-      final connection = await MySQLConnection.createConnection(
+      sqlConnection = await MySQLConnection.createConnection(
         host: '127.0.0.1',
         port: 3306,
         userName: env['userName']!,
@@ -23,7 +23,7 @@ class SqlConnection {
         secure: false,
       );
 
-      await connection.connect();
+      await sqlConnection.connect();
     } on MySQLException catch (e) {
       throw DatabaseException(e.message);
     } on SocketException catch (e) {

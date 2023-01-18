@@ -29,6 +29,11 @@ class CurrentUserCubit extends Cubit<User?> {
     emit(user);
   }
 
+  void addGroup(Group group) {
+    emit(state?.copyWith(groups: List.of(state?.groups ?? [])..add(group)));
+  }
+
+
   void remove() {
     currentUserRepository.removeId();
     emit(null);
