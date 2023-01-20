@@ -1,4 +1,4 @@
-import 'package:chat_app/scroll_configuration.dart';
+import 'package:chat_app/config/scroll_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,20 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(create: (_) => CurrentUserRepository()),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<CurrentUserCubit>(
-            create: (context) => CurrentUserCubit(
-              currentUserRepository: RepositoryProvider.of<CurrentUserRepository>(context),
-            )..init(),
-          ),
-        ],
+    return RepositoryProvider(
+      create: (context) => CurrentUserRepository(),
+      child: BlocProvider<CurrentUserCubit>(
+        create: (context) => CurrentUserCubit(
+          currentUserRepository: RepositoryProvider.of<CurrentUserRepository>(context),
+        )..init(),
         child: MaterialApp(
-          scrollBehavior: ScrollConfigure().copyWith(scrollbars: false),
+          scrollBehavior: ScrollConfig().copyWith(scrollbars: false),
           title: 'Socket Chat',
           theme: ThemeData.dark(),
           home: const SplashView(),
