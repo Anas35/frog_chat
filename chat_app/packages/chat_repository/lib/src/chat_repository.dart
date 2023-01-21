@@ -5,19 +5,18 @@ import 'package:http/http.dart' as http;
 import 'package:models/models.dart';
 
 class ChatRepository {
-  ChatRepository({required String groupId}) {
-    _channel = _joinChat(groupId);
-  }
 
-  late WebSocketChannel _channel;
+  WebSocketChannel? _channel;
 
-  final _url = 'http://localhost:8080/messages';
+  static const _url = 'http://localhost:8080/messages';
 
-  WebSocketChannel _joinChat(String groupId) {
-    return WebSocketChannel.connect(
+  void joinChat(String groupId) {
+    _channel ??= WebSocketChannel.connect(
       Uri.parse('ws://localhost:8080/ws?groupId=$groupId'),
     );
   }
+  
+  bool get isChannelActive => _channel != null;
 
   Future<MessageDetails> getMessage(String id) async {
     final response = await http.get(Uri.parse('$_url/$id'));
@@ -30,9 +29,12 @@ class ChatRepository {
     }
   }
 
-  Stream<String> get messages => _channel.stream.cast<String>();
+  Stream<String> get messages => _channel!.stream.cast<String>();
 
-  void close() => _channel.sink.close();
+  void close() {
+    _channel?.sink.close();
+    _channel = null;
+  }
 
   Future<void> addMessage(Message message) async {
     final response = await http.post(
@@ -41,7 +43,7 @@ class ChatRepository {
     );
 
     if (response.statusCode == 201) {
-      _channel.sink.add(jsonDecode(response.body));
+      _channel?.sink.add(jsonDecode(response.body));
     } else {
       throw response.body;
     }

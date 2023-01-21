@@ -1,34 +1,30 @@
+import 'package:chat_app/selected_group/selected_group_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/chat/bloc/bloc.dart';
 import 'package:chat_app/chat/widgets/chat_body.dart';
 import 'package:models/models.dart';
 
-class ChatPage extends StatelessWidget {
-  
-  const ChatPage({super.key, required this.group});
-
-  final Group group;
+class ChatView extends StatelessWidget {
+  const ChatView({super.key});
 
   /// The static route for ChatPage
-  static Route<dynamic> route(Group group) {
-    return MaterialPageRoute<dynamic>(builder: (_) => ChatPage(group: group));
+  static Route<dynamic> route() {
+    return MaterialPageRoute<dynamic>(builder: (_) => const ChatView());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChatBloc(groupId: group.groupId)..add(PreMessagesEvent()),
-      child: Scaffold(
-        appBar: AppBar(),
-        body: const ChatView(),
-      ),
+    return BlocBuilder<SelectedGroupCubit, Group?>(
+      builder: (context, state) {
+        context.read<ChatBloc>().add(PreMessagesEvent(groupId: state!.groupId));
+        return const ChatStateView();
+      },
     );
-  }    
+  }
 }
 
-class ChatView extends StatelessWidget {
-  
-  const ChatView({super.key});
+class ChatStateView extends StatelessWidget {
+  const ChatStateView({super.key});
 
   @override
   Widget build(BuildContext context) {

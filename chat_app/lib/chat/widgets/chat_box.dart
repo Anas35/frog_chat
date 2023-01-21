@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:models/models.dart';
 
 class ChatBox extends StatelessWidget {
-  const ChatBox({super.key, required this.messageDetails});
+  final bool isSender;
 
-  final MessageDetails messageDetails;
+  final Widget child;
+
+  const ChatBox({super.key, required this.isSender, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 65,
-      child: Column(
-        children: [
-          Text(messageDetails.user.name),
-          Text(messageDetails.message),
-        ],
+    return Align(
+      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+      child: Padding(
+        padding: isSender ? const EdgeInsets.only(left: 20.0) : const EdgeInsets.only(right: 20.0),
+        child: Container(
+          margin: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: isSender ? Colors.green : Colors.grey,
+            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+          ),
+          child: child,
+        ),
       ),
     );
   }

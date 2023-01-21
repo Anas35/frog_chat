@@ -15,7 +15,7 @@ mixin MessageFunction on SqlConnection {
           final row = result.rows.first;
           final user = User.fromJson(row.assoc());
 
-          return MessageDetails(user: user, message: row.assoc()['message']!);
+          return MessageDetails(user: user, message: row.assoc()['message']!, messageId: id);
         }
 
         return null;

@@ -9,12 +9,10 @@ part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-
-  final String groupId;
   
-  ChatBloc({required this.groupId}) :
-  _chatRepository = ChatRepository(groupId: groupId),
+  ChatBloc() :
   _groupRepository = GroupRepository(),
+  _chatRepository = ChatRepository(),
   super(const ChatState()) {
     on<PreMessagesEvent>(_onPreMessagesEvent);
     on<AddMessageEvent>(_onAddMessageEvent);
@@ -31,10 +29,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     try {
       emit(state.copyWith(chatStatus: ChatStatus.loading));
-      final messages = await _groupRepository.getGroupMessages(groupId);
+
+      if(_chatRepository.isChannelActive) {
+        _streamSubscription?.cancel();
+        _chatRepository.close();
+      }
+      
+      _chatRepository.joinChat(event.groupId);
+      final messages = await _groupRepository.getGroupMessages(event.groupId);
+
       emit(
         state.copyWith(
-          chatStatus: ChatStatus.loaded, messages: List.from(state.messages)..addAll(messages),
+          chatStatus: ChatStatus.loaded, 
+          messages: List.from(messages),
         ),
       );
 
@@ -61,12 +68,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     try {
-      final message = await _chatRepository.getMessage(event.messageId);
-      emit(
-        state.copyWith(
-          chatStatus: ChatStatus.loaded, messages: List.from(state.messages)..add(message),
-        ),
-      );
+
+      final messageIds = state.messages.map((message) => message.messageId).toList();
+
+      if (!messageIds.contains(event.messageId)) {
+        final message = await _chatRepository.getMessage(event.messageId);
+        emit(
+          state.copyWith(
+            chatStatus: ChatStatus.loaded, messages: List.from(state.messages)..add(message),
+          ),
+        );
+      }
+
     } catch (e) {
       print(e);
       emit(state.copyWith(
@@ -81,7 +94,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     try {
       final message = Message(
-        groupId: groupId,
+        groupId: event.groupId,
         userId: event.userId,
         message: event.message,
       );

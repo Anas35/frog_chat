@@ -1,8 +1,12 @@
 import 'package:chat_app/chat/widgets/chat_box.dart';
+import 'package:chat_app/config/size_config.dart';
 import 'package:chat_app/current_user/cubit/current_user_cubit.dart';
-import 'package:flutter/gestures.dart';
+import 'package:chat_app/group/view/view.dart';
+import 'package:chat_app/selected_group/selected_group_cubit.dart';
+import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/chat/bloc/bloc.dart';
+import 'package:models/models.dart';
 
 class ChatBody extends StatefulWidget {
   const ChatBody({super.key});
@@ -41,50 +45,63 @@ class _ChatBodyState extends State<ChatBody> {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        return Center(
-          child: SizedBox(
-            width: 250,
-            child: Column(
-              children: [
-                Expanded(
-                  child: CustomScrollView(
-                    controller: scrollController,
-                    scrollBehavior: const CustomScrollBehaviour(),
-                    slivers: [
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final messageDetails = state.messages[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    const SizedAppBar(),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: state.messages.length,
+                        (context, index) {
+                          final messageDetails = state.messages[index];
+                          if (index % 2 == 0) {
                             return ChatBox(
-                              messageDetails: messageDetails,
+                              isSender: false,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(messageDetails.user.name),
+                                  Text(messageDetails.message),
+                                ],
+                              ),
                             );
-                          },
-                          childCount: state.messages.length,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      prefixIcon: IconButton(
-                        onPressed: () {
-                          final userId = context.read<CurrentUserCubit>().state!.id;
-                          context.read<ChatBloc>().add(
-                            AddMessageEvent(message: textEditingController.text, userId: userId)
-                          );
+                          } else {
+                            return ChatBox(
+                              isSender: true,
+                              child: Text(
+                                messageDetails.message,
+                                textAlign: TextAlign.end,
+                              ),
+                            );
+                          }
                         },
-                        icon: const Icon(Icons.send),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              ChatTextField(
+                controller: textEditingController,
+                onPressed: () {
+                  final userId = context.read<CurrentUserCubit>().state!.id;
+                  final groupId = context.read<SelectedGroupCubit>().state!.groupId;
+                  context.read<ChatBloc>().add(
+                      AddMessageEvent(
+                        message: textEditingController.text,
+                        groupId: groupId,
+                        userId: userId,
+                      ),
+                    );
+                    textEditingController.clear();
+                },
+              ),
+            ],
           ),
         );
       },
@@ -92,36 +109,38 @@ class _ChatBodyState extends State<ChatBody> {
   }
 }
 
-class CustomScrollBehaviour extends MaterialScrollBehavior {
-  const CustomScrollBehaviour();
+class SizedAppBar extends StatelessWidget {
+  const SizedAppBar({super.key});
 
   @override
-  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
-    switch (axisDirectionToAxis(details.direction)) {
-      case Axis.horizontal:
-        return child;
-      case Axis.vertical:
-        switch (getPlatform(context)) {
-          case TargetPlatform.linux:
-          case TargetPlatform.macOS:
-          case TargetPlatform.windows:
-            return Scrollbar(
-              radius: Radius.zero,
-              thickness: 10.0,
-              controller: details.controller,
-              child: child,
-            );
-          case TargetPlatform.android:
-          case TargetPlatform.fuchsia:
-          case TargetPlatform.iOS:
-            return child;
-        }
-    }
+  Widget build(BuildContext context) {
+    return BlocBuilder<SelectedGroupCubit, Group?>(
+      builder: (context, state) {
+        return SizeConfig(
+          large: SliverAppBar(
+            pinned: true,
+            title: Text(state!.groupName),
+          ),
+          medium: SliverAppBar(
+            pinned: true,
+            title: InkWell(
+              onTap: () {
+                Navigator.push(context, GroupDetailView.route(state));
+              },
+              child: Text(state.groupName),
+            ),
+          ),
+          small: SliverAppBar(
+            pinned: true,
+            title: InkWell(
+              onTap: () {
+                Navigator.push(context, GroupDetailView.route(state));
+              },
+              child: Text(state.groupName),
+            ),
+          ),
+        );
+      },
+    );
   }
-
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.mouse,
-        ...super.dragDevices,
-      };
 }

@@ -9,9 +9,9 @@ mixin GroupFunction on SqlConnection {
   Future<List<MessageDetails>> getGroupMessages(String groupId) async {
     return DatabaseException.wrapper<List<MessageDetails>>(
       body: () async {
-        final messages = await sqlConnection.execute("SELECT hex(`user`.`id`) as id, `user`.name as name, message from `user` join messages on messages.groupId = '$groupId'");
+        final messages = await sqlConnection.execute("SELECT hex(`user`.`id`) as id, `user`.name as name, `messages`.`id` as messageId, message from messages join `user` on messages.userId = `user`.`id` and messages.groupId = '$groupId'");
         final list = messages.rows.map((row) {
-          return MessageDetails(user: User.fromJson(row.assoc()), message: row.assoc()['message']!);
+          return MessageDetails(user: User.fromJson(row.assoc()), message: row.assoc()['message']!, messageId: row.assoc()['messageId']!);
         }).toList();
         return list;
       },

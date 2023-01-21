@@ -11,7 +11,7 @@ class GroupDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, ChatPage.route(group));
+        Navigator.push(context, ChatView.route());
       },
       child: Container(
         height: 50,

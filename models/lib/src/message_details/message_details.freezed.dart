@@ -22,6 +22,7 @@ MessageDetails _$MessageDetailsFromJson(Map<String, dynamic> json) {
 mixin _$MessageDetails {
   User get user => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
+  String get messageId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,7 @@ abstract class $MessageDetailsCopyWith<$Res> {
           MessageDetails value, $Res Function(MessageDetails) then) =
       _$MessageDetailsCopyWithImpl<$Res, MessageDetails>;
   @useResult
-  $Res call({User user, String message});
+  $Res call({User user, String message, String messageId});
 
   $UserCopyWith<$Res> get user;
 }
@@ -55,6 +56,7 @@ class _$MessageDetailsCopyWithImpl<$Res, $Val extends MessageDetails>
   $Res call({
     Object? user = null,
     Object? message = null,
+    Object? messageId = null,
   }) {
     return _then(_value.copyWith(
       user: null == user
@@ -64,6 +66,10 @@ class _$MessageDetailsCopyWithImpl<$Res, $Val extends MessageDetails>
       message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      messageId: null == messageId
+          ? _value.messageId
+          : messageId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -85,7 +91,7 @@ abstract class _$$_MessageDetailsCopyWith<$Res>
       __$$_MessageDetailsCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({User user, String message});
+  $Res call({User user, String message, String messageId});
 
   @override
   $UserCopyWith<$Res> get user;
@@ -104,6 +110,7 @@ class __$$_MessageDetailsCopyWithImpl<$Res>
   $Res call({
     Object? user = null,
     Object? message = null,
+    Object? messageId = null,
   }) {
     return _then(_$_MessageDetails(
       user: null == user
@@ -114,6 +121,10 @@ class __$$_MessageDetailsCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
+      messageId: null == messageId
+          ? _value.messageId
+          : messageId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -121,7 +132,8 @@ class __$$_MessageDetailsCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_MessageDetails implements _MessageDetails {
-  const _$_MessageDetails({required this.user, required this.message});
+  const _$_MessageDetails(
+      {required this.user, required this.message, required this.messageId});
 
   factory _$_MessageDetails.fromJson(Map<String, dynamic> json) =>
       _$$_MessageDetailsFromJson(json);
@@ -130,10 +142,12 @@ class _$_MessageDetails implements _MessageDetails {
   final User user;
   @override
   final String message;
+  @override
+  final String messageId;
 
   @override
   String toString() {
-    return 'MessageDetails(user: $user, message: $message)';
+    return 'MessageDetails(user: $user, message: $message, messageId: $messageId)';
   }
 
   @override
@@ -142,12 +156,14 @@ class _$_MessageDetails implements _MessageDetails {
         (other.runtimeType == runtimeType &&
             other is _$_MessageDetails &&
             (identical(other.user, user) || other.user == user) &&
-            (identical(other.message, message) || other.message == message));
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.messageId, messageId) ||
+                other.messageId == messageId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, user, message);
+  int get hashCode => Object.hash(runtimeType, user, message, messageId);
 
   @JsonKey(ignore: true)
   @override
@@ -166,7 +182,8 @@ class _$_MessageDetails implements _MessageDetails {
 abstract class _MessageDetails implements MessageDetails {
   const factory _MessageDetails(
       {required final User user,
-      required final String message}) = _$_MessageDetails;
+      required final String message,
+      required final String messageId}) = _$_MessageDetails;
 
   factory _MessageDetails.fromJson(Map<String, dynamic> json) =
       _$_MessageDetails.fromJson;
@@ -175,6 +192,8 @@ abstract class _MessageDetails implements MessageDetails {
   User get user;
   @override
   String get message;
+  @override
+  String get messageId;
   @override
   @JsonKey(ignore: true)
   _$$_MessageDetailsCopyWith<_$_MessageDetails> get copyWith =>

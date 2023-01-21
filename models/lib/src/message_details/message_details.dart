@@ -11,6 +11,7 @@ class MessageDetails with _$MessageDetails {
   const factory MessageDetails({
     required User user,
     required String message,
+    required String messageId,
   }) = _MessageDetails;
 
 
