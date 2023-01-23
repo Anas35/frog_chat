@@ -1,6 +1,6 @@
 import 'package:chat_app/authentication/authentication.dart';
 import 'package:chat_app/current_user/current_user.dart';
-import 'package:chat_app/home_page.dart';
+import 'package:chat_app/home_view.dart';
 import 'package:chat_app/widgets/re_button.dart';
 import 'package:chat_app/widgets/re_text_field.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +23,15 @@ class _LogViewState extends State<LogView> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(userId: state.user.id),
+              builder: (context) => const HomeView(),
             ),
           );
         }
 
         if (state.errorMessage.isNotEmpty) {
-          context.snackBar(state.errorMessage);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('state.errorMessage'))
+          );
         }
       },
       child: Scaffold(

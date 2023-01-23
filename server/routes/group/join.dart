@@ -7,6 +7,8 @@ import 'package:database/database.dart';
 import 'package:models/models.dart';
 
 FutureOr<Response> onRequest(RequestContext context) async {
+  print('object');
+  print(context.request.url);
   switch (context.request.method) {
     case HttpMethod.post:
       return _post(context);
@@ -25,16 +27,19 @@ Future<Response> _post(RequestContext context) async {
     final dataSource = context.read<DatabaseConnection>();
     final json = await context.request.json() as Map<String, dynamic>;
 
-    await dataSource.joinGroup(Participants.fromJson(json));
+    final group = await dataSource.joinGroup(Participants.fromJson(json));
 
-    return Response.json();
+    return Response.json(
+      statusCode: HttpStatus.accepted,
+      body: group.toJson(),
+    );
   } on DatabaseException catch (e) {
     return Response.json(
       statusCode: HttpStatus.internalServerError,
       body: e.message,
     );
   } catch (e, stackTrace) {
-    log('Error: Route: user/create', error: e, stackTrace: stackTrace);
+    log('Error: Route: group/join', error: e, stackTrace: stackTrace);
     return Response.json(
       statusCode: HttpStatus.badGateway,
       body: 'Something went wrong, Please try again later',

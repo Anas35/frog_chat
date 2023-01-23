@@ -1,4 +1,5 @@
 import 'package:chat_app/current_user/current_user.dart';
+import 'package:chat_app/join_group/view/join_group_page.dart';
 import 'package:chat_app/selected_group/selected_group_cubit.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,13 @@ class GroupsListView extends StatelessWidget {
             ),
           ),
           ElevatedIconButton(icons: Icons.create, text: 'Create Group', onPressed: () {}),
-          ElevatedIconButton(icons: Icons.add, text: 'Join Group', onPressed: () {}),
+          ElevatedIconButton(
+            icons: Icons.add, 
+            text: 'Join Group', 
+            onPressed: () {
+              JoinGroupPage.showDailogView(context);
+            },
+          ),
         ],
       ),
     );

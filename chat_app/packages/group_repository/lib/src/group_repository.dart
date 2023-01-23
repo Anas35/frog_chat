@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:group_repository/group_repository.dart';
 import 'package:http/http.dart' as http;
@@ -6,11 +7,11 @@ import 'package:models/models.dart';
 
 class GroupRepository {
 
-  static const _url_ = 'http://localhost:8080/group';
+  static const _url = 'http://localhost:8080/group';
 
   Future<Group> createGroup(String groupName, String userId) async {
     final response = await http.post(
-      Uri.parse('$_url_/create'),
+      Uri.parse('$_url/create'),
       body: jsonEncode({
         'groupName': groupName,
         'userId': userId,
@@ -27,11 +28,11 @@ class GroupRepository {
 
   Future<Group> joinGroup(Participants participants) async {
     final response = await http.post(
-      Uri.parse('$_url_/join'),
+      Uri.parse('$_url/join'),
       body: jsonEncode(participants.toJson()),
     );
 
-    if (response.statusCode != 201) {
+    if (response.statusCode != HttpStatus.accepted) {
       throw GroupException(response.body);
     } else {
       final result = jsonDecode(response.body) as Map<String, Object?>;
@@ -41,7 +42,7 @@ class GroupRepository {
 
   Future<List<MessageDetails>> getGroupMessages(String groupId) async {
     final response = await http.get(
-      Uri.parse('$_url_/$groupId/messages'),
+      Uri.parse('$_url/$groupId/messages'),
     );
 
     if (response.statusCode != 200) {
