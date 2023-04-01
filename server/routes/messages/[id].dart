@@ -1,41 +1,23 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:database/database.dart';
+import 'package:server/exception_handling.dart';
 
 FutureOr<Response> onRequest(RequestContext context, String id) async {
-  switch (context.request.method) {
-    case HttpMethod.get:
-      return _get(context, id);
-    case HttpMethod.post:
-    case HttpMethod.delete:
-    case HttpMethod.head:
-    case HttpMethod.options:
-    case HttpMethod.patch:
-    case HttpMethod.put:
-      return Response(statusCode: HttpStatus.methodNotAllowed);
+  if (context.request.method == HttpMethod.get) {
+    return _get(context, id);
+  } else {
+    return Response(statusCode: HttpStatus.methodNotAllowed);
   }
 }
 
 Future<Response> _get(RequestContext context, String id) async {
-  try {
-    final dataSource = context.read<DatabaseConnection>();
+  return requestQuery(() async {
+    final messageQuery = context.read<MessageQuery>();
+    final message = await messageQuery.getMessage(id);
 
-    final message = await dataSource.getMessage(id);
-
-    return Response.json(body: message?.toJson());
-  } on DatabaseException catch (e) {
-    return Response.json(
-      statusCode: HttpStatus.internalServerError,
-      body: e.message,
-    );
-  } catch (e, stackTrace) {
-    log('Error: Route: user/create', error: e, stackTrace: stackTrace);
-    return Response.json(
-      statusCode: HttpStatus.badGateway,
-      body: 'Something went wrong, Please try again later',
-    );
-  }
+    return Response.json(body: message.toJson());
+  });
 }

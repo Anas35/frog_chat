@@ -1,0 +1,17 @@
+name: validation
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: none
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: '>=3.0.0-0'
+
+dependencies: 
+  email_validator: ^2.1.17
+  models:
+    path: ../../../packages/models
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0

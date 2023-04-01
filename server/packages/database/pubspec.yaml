@@ -5,14 +5,14 @@ publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: '>=2.19.0-444.2.beta <3.0.0'
+  sdk: '>=3.0.0-0'
 
 dependencies:
   dotenv: ^4.0.1
   mysql_client: ^0.0.27
   uuid: ^3.0.7
   models:
-    path: ../../../models
+    path: ../../../packages/models
 
 dev_dependencies:
   lints: ^2.0.0
