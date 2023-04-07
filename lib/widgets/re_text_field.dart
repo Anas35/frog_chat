@@ -17,6 +17,7 @@ class ReTextField extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
         labelStyle: const TextStyle(fontWeight: FontWeight.w400),
       ),
+      style: const TextStyle(fontWeight: FontWeight.w400),
     );
   }
 }

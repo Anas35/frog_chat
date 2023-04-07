@@ -13,10 +13,7 @@ class RegisterView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthenticationCubit(context.read<ApiWrapper>()),
-      child: Scaffold(
-        appBar: AppBar(),
-        body: const RegisterBody(),
-      ),
+      child: const RegisterBody(),
     );
   }
 }

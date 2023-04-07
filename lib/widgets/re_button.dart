@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ReButton extends StatelessWidget {
-  const ReButton({super.key, required this.text, this.onPressed});
+  const ReButton({super.key, required this.text, this.onPressed, this.backgroundColor, this.foregroundColor});
 
   final String text;
+
+  final Color? backgroundColor;
+
+  final Color? foregroundColor;
 
   final void Function()? onPressed;
 
@@ -12,8 +16,14 @@ class ReButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          fixedSize: const Size(120.0, 40.0),
-          textStyle: const TextStyle(fontWeight: FontWeight.w400)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        fixedSize: const Size(120.0, 40.0),
+        textStyle: const TextStyle(fontWeight: FontWeight.w400),
+      ),
       child: Text(text),
     );
   }

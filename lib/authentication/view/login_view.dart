@@ -14,10 +14,7 @@ class LogInView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthenticationCubit(context.read<ApiWrapper>()),
-      child: Scaffold(
-        appBar: AppBar(),
-        body: const LogInBody(),
-      ),
+      child: const LogInBody(),
     );
   }
 }

@@ -46,10 +46,13 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           scrollBehavior: ScrollConfig().copyWith(scrollbars: false),
           title: 'Socket Chat',
-          theme: ThemeData.dark(),
-          home: const UserView(),
+          theme: ThemeData(
+            useMaterial3: true,
+          ),
+          home: const RedirectView(),
         ),
       ),
     );

@@ -17,7 +17,7 @@ void main() {
 
     group('route', () {
       test('is routable', () {
-        expect(UserView.route(), isA<MaterialPageRoute>());
+        expect(RedirectView.route(), isA<MaterialPageRoute>());
       });
     });
 
@@ -26,11 +26,11 @@ void main() {
         RepositoryProvider<Preference>(
           create: (_) => MockPreference(),
           child: const MaterialApp(
-            home: UserView(),
+            home: RedirectView(),
           ),
         ),
       );
-      expect(find.byType(UserView), findsOneWidget);
+      expect(find.byType(RedirectView), findsOneWidget);
     });
     
     testWidgets('renders UserView', (tester) async {
@@ -40,11 +40,11 @@ void main() {
             preference: MockPreference(),
           ),
           child: const MaterialApp(
-            home: UserView(),
+            home: RedirectView(),
           ),
         ),
       );
-      expect(find.byType(UserView), findsOneWidget);
+      expect(find.byType(RedirectView), findsOneWidget);
     });
 
     testWidgets('Render Default Authentication View', (tester) async {
@@ -52,11 +52,11 @@ void main() {
         MaterialApp(
           home: BlocProvider(
             create: (_) => UserCubit(preference: MockPreference()),
-            child: const UserView(),
+            child: const RedirectView(),
           ),
         ),
       );
-      expect(find.byType(AuthenticationView), findsOneWidget);
+      expect(find.byType(LandingView), findsOneWidget);
     });
 
     testWidgets('Render Home View', (tester) async {
@@ -82,7 +82,7 @@ void main() {
                   create: (context) => SelectedGroupCubit(),
                 ),
               ],
-              child: const UserView(),
+              child: const RedirectView(),
             ),
           ),
         ),

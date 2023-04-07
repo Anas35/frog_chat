@@ -27,35 +27,59 @@ class LogInBody extends StatelessWidget {
         }
       },
       builder: (context, state) {
-      return Scaffold(
-        body: Center(
-          child: SizedBox(
-            width: 300,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ReTextField(
-                  labelText: 'Email',
-                  onChanged: context.read<AuthenticationCubit>().onEmailChange,
-                ),
-                const SizedBox(height: 30),
-                ReTextField(
-                  labelText: 'Password',
-                  onChanged: context.read<AuthenticationCubit>().onPasswordChange,
-                ),
-                const SizedBox(height: 30),
-                ReButton(
-                  onPressed: () async {
-                    await context.read<AuthenticationCubit>().logIn();
-                  },
-                  text: 'Log In',
-                ),
-              ],
+        return ReScaffold(
+          body: Center(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 1.25,
+                    spreadRadius: 0.75,
+                    offset: Offset(0.5, 1.0),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(24.0),
+              width: 320.0,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  const Text(
+                    'Login here!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ReTextField(
+                    labelText: 'Email',
+                    onChanged: context.read<AuthenticationCubit>().onEmailChange,
+                  ),
+                  const SizedBox(height: 30),
+                  ReTextField(
+                    labelText: 'Password',
+                    onChanged: context.read<AuthenticationCubit>().onPasswordChange,
+                  ),
+                  const SizedBox(height: 30),
+                  ReButton(
+                    onPressed: () async {
+                      await context.read<AuthenticationCubit>().logIn();
+                    },
+                    backgroundColor: const Color(0xFF00E676).withOpacity(0.75),
+                    foregroundColor: Colors.white,
+                    text: 'Log In',
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-      }
+        );
+      },
     );
   }
 }

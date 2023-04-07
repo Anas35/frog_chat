@@ -3,12 +3,12 @@ import 'package:frog_chat/home_view.dart';
 import 'package:frog_chat/user/cubit/cubit.dart';
 import 'package:flutter/material.dart';
 
-class UserView extends StatelessWidget {
-  const UserView({super.key});
+class RedirectView extends StatelessWidget {
+  const RedirectView({super.key});
 
   static Route<dynamic> route() {
     return MaterialPageRoute<dynamic>(builder: (_) {
-      return const UserView();
+      return const RedirectView();
     });
   }
 
@@ -19,7 +19,7 @@ class UserView extends StatelessWidget {
         if (state.isLogged()) {
           return const HomeView();
         } else {
-          return const AuthenticationView();
+          return const LandingView();
         }
       },
     );
