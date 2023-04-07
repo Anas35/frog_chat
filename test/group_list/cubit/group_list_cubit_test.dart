@@ -17,7 +17,7 @@ void main() {
 
     test('initial state has default value for customProperty', () {
       final groupListCubit = GroupListCubit();
-      //expect(groupListCubit.state.customProperty, equals('Default Value'));
+      expect(groupListCubit.state.groups, equals([]));
     });
 
     blocTest<GroupListCubit, GroupListState>(
