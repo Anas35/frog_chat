@@ -16,7 +16,7 @@ class RedirectView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {
-        if (state.isLogged()) {
+        if (state.token.isNotEmpty) {
           return const HomeView();
         } else {
           return const LandingView();

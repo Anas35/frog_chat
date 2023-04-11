@@ -20,7 +20,7 @@ void main() {
       final userCubit = UserCubit(
         preference: preference,
       );
-      expect(userCubit.state, const UserState());
+      expect(userCubit.state, UserState);
     });
 
     blocTest<UserCubit, UserState>(
@@ -32,7 +32,7 @@ void main() {
       build: () => UserCubit(preference: preference),
       act: (cubit) => cubit.getState(),
       expect: () => const <UserState>[
-        UserState(token: 'token', userId: 'id'),
+        (token: 'token', userId: 'id'),
       ],
       verify: (_) {
         verify(() => preference.getToken()).called(1);

@@ -1,11 +1,11 @@
 import 'package:frog_chat/user/repository/preference.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 
-part 'user_state.dart';
+typedef UserState = ({String token, String userId});
 
 class UserCubit extends Cubit<UserState> {
-  UserCubit({required this.preference}) : super(const UserState());
+
+  UserCubit({required this.preference}) : super(const (token: '', userId: ''));
 
   final Preference preference;
 
@@ -17,11 +17,10 @@ class UserCubit extends Cubit<UserState> {
   void getState() {
     final token = preference.getToken();
     if (token != null) {
-      emit(state.copyWith(
+      emit((
         token: token,
         userId: preference.fetchUserId(token),
       ));
     }
   }
-  
 }
